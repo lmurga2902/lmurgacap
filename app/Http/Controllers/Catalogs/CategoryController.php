@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Catalogs;
 use App\Core\Eloquent\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\CategoryRequest;
+use Facades\App\Core\Facades\AlertCustom;
 
 class CategoryController extends Controller
 {
@@ -15,10 +17,12 @@ class CategoryController extends Controller
      */
     public function index()
     {
+     
         //dd (request());
 
         //$categories=Category::all();
-        $categories=Category::paginate(2);
+        //$categories=Category::paginate(5);
+        $categories=Category::where('name','ILIKE',"%".request()->get('filter')."%")->paginate(5);
         return view('categories.index',compact('categories'));
 
         /*$categories=Category::all();
@@ -43,9 +47,17 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        //
+        //dd (request());
+        //Category::create($request->all());
+        //Category::create($request->only(['name','description']));
+
+        Category::create($request->validated());
+        AlertCustom::success('Guardado correctamente');
+        return redirect()->route('categories.index');
+        //return view('categories.index')
+
     }
 
     /**
@@ -67,7 +79,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('categories.edit',compact('category'));
     }
 
     /**
@@ -77,9 +89,12 @@ class CategoryController extends Controller
      * @param  \App\Core\Eloquent\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(CategoryRequest $request, Category $category)
     {
-        //
+        $category->fill($request->validated());
+        $category->save();
+        AlertCustom::success('Actualizado correctamente');
+        return redirect()->route('categories.index');
     }
 
     /**
@@ -90,6 +105,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        AlertCustom::success('Eliminado correctamente');
+        return redirect()->route('categories.index');
     }
 }
