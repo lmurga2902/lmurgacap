@@ -39,7 +39,8 @@ class ArticleController extends Controller
      */
     public function store(ArticleRequest $request)
     {
-        dd(request());
+        //dd(request());
+        $objArticle=Article::create($request->validated());
     }
 
     /**
