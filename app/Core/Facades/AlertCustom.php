@@ -12,6 +12,4 @@ class AlertCustom{
         session()->flash('error',$msg);
     }
 
-
-
 }

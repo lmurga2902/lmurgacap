@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Core\Eloquent;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Resource extends Model
+{
+   
+    protected $fillable = ['name', 'vpath', 'article_id'];
+
+    public function article(){
+       return $this->belongsTo(Article::class,'article_id','id');
+    }
+
+    public function assign($uploadedFiles){
+        $arrResources=[];
+        foreach($uploadedFiles as $key => $files) {
+            $nameFile='IMG'.uniqid().'.png';
+            $arrResources[]=new Resource([
+                'name'=>$nameFile,
+                'vpath'=>'/photos-articles/'
+            ]);
+        }
+        return $arrResources;
+    }
+}
