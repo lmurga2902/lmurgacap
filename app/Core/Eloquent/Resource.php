@@ -15,12 +15,15 @@ class Resource extends Model
 
     public function assign($uploadedFiles){
         $arrResources=[];
-        foreach($uploadedFiles as $key => $files) {
-            $nameFile='IMG'.uniqid().'.png';
-            $arrResources[]=new Resource([
-                'name'=>$nameFile,
-                'vpath'=>'/photos-articles/'
-            ]);
+        foreach ($uploadedFiles as $key => $file) {
+    $nameFile='IMG'.uniqid().'.'.$file->getClientOriginalExtension();
+    
+    saveFile($nameFile,$file);
+    
+        $arrResources[]=new Resource([
+        'name'=>$nameFile,
+        'vpath'=>'/photos-articles/'
+        ]);
         }
         return $arrResources;
     }
